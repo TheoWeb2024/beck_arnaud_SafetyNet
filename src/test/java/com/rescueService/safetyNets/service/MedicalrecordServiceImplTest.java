@@ -2,7 +2,7 @@ package com.rescueService.safetyNets.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.rescueService.safetyNets.model.Allergies;
-import com.rescueService.safetyNets.model.Firestation;
 import com.rescueService.safetyNets.model.Medicalrecord;
-import com.rescueService.safetyNets.model.Medications;
 import com.rescueService.safetyNets.model.Person;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,7 +26,6 @@ class MedicalrecordServiceImplTest {
 	
 		MedicalrecordServiceImpl testDataReadingFile = new MedicalrecordServiceImpl();
 		List<Medicalrecord>medicals = testDataReadingFile.readJsonFileForMedicalrecords();
-		//List<Medications> dataMedications = medicals.get(0).getMedications();
 			
 		assertNotNull(medicals);
 	}
@@ -123,7 +119,6 @@ class MedicalrecordServiceImplTest {
 		MedicalrecordServiceImpl testMedi = new MedicalrecordServiceImpl();
 		testMedi.deleteMedicalrecord(medimedi.getLastName(), medimedi.getFirstName());
 		
-		//assertEquals("",testFire);
 		assertNotNull(medimedi.getLastName());
 		assertEquals("10/11/1977",medimedi.getBirthDate());
 	}

@@ -1,25 +1,19 @@
 package com.rescueService.safetyNets.service;
 
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.rescueService.safetyNets.model.Firestation;
 import com.rescueService.safetyNets.model.Person;
-
 
 @ExtendWith(MockitoExtension.class)
 class PersonServiceImplTest {
@@ -211,10 +205,7 @@ class PersonServiceImplTest {
 		
 		//assertEquals("",testFire);
 		assertNotNull(personperson.getEmail());
-	}
-	
-	
-	
+	}	
 }
 
 

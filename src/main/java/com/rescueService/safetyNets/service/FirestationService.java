@@ -3,10 +3,6 @@ package com.rescueService.safetyNets.service;
 import java.util.List;
 
 import com.rescueService.safetyNets.model.Firestation;
-import com.rescueService.safetyNets.model.Person;
-
-
-
 
 public interface FirestationService {
 

@@ -34,8 +34,6 @@ class FirestationServiceImplTest {
 		
 		
 		assertEquals(13,dataSize);
-		//assertEquals(3, num);
-		//assertNotNull(dataStation);
 	}
 	
 	@Test
@@ -46,15 +44,12 @@ class FirestationServiceImplTest {
 		newFirestationToWrite.setStationNumber(10);
 		firestationDatas.add(newFirestationToWrite);
 	
-		
-		
 		FirestationServiceImpl testWriteDataInFile = new FirestationServiceImpl();
 		List<Firestation> firestationsWritedInFile = testWriteDataInFile.writeJSONData(firestationDatas);
 		String resultFirestationData=null;
 		for(Firestation fireS:firestationsWritedInFile) {
 			resultFirestationData = fireS.getAddress();
 		}
-		
 		assertNotNull(firestationsWritedInFile);
 		assertEquals(" 10009 Manager St", resultFirestationData);
 	}
@@ -74,7 +69,6 @@ class FirestationServiceImplTest {
 				fireListed.add(fired);
 			}
 		}
-		//assertEquals("1509 Culver St",resultFireAddress); 
 		assertTrue(resultFireAddress);
 	}
 	
@@ -96,18 +90,14 @@ class FirestationServiceImplTest {
 			stationNum = fir.getStationNumber();
 			 if(fir.getStationNumber()==(station_number)) {
 				 resultAddress = fir.getAddress();
-			for(Person rreessuu:resultList) {
+				 for(Person rreessuu:resultList) {
 				 addressPerson = rreessuu.getAddress();
 				 phone = rreessuu.getPhone();
 				 pompier.add(phone);
+				 }
+			 }
 		}
-		}
-		}
-		
-		//assertNotNull(phone);
-		//assertEquals(2,stationNum);
 		assertEquals(addressPerson,resultAddress);
-		
 	}
 	
 	@Test
@@ -133,7 +123,6 @@ class FirestationServiceImplTest {
 		FirestationServiceImpl firestationRsult = new FirestationServiceImpl();
 		firestationRsult.updateFirestation(firefire);
 		
-		
 		assertEquals("15055 Orleans St",firefire.getAddress());
 		assertNotNull(firestationRsult);
 	}
@@ -148,8 +137,7 @@ class FirestationServiceImplTest {
 		fireListed.add(firefire);
 		FirestationServiceImpl testFire = new FirestationServiceImpl();
 		testFire.deleteFirestation(firefire.getId());
-		
-		//assertEquals("",testFire);
+
 		assertNotNull(firefire.getAddress());
 	}
 }

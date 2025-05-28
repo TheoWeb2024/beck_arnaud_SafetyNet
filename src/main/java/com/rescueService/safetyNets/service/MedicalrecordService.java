@@ -1,9 +1,7 @@
 package com.rescueService.safetyNets.service;
 
 import java.util.List;
-import java.util.stream.Stream;
 
-import com.rescueService.safetyNets.model.Firestation;
 import com.rescueService.safetyNets.model.Medicalrecord;
 import com.rescueService.safetyNets.model.Person;
 

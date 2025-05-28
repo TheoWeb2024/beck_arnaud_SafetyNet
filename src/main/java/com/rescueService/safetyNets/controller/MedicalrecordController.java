@@ -1,7 +1,6 @@
 package com.rescueService.safetyNets.controller;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,14 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rescueService.safetyNets.model.Firestation;
 import com.rescueService.safetyNets.model.Medicalrecord;
-import com.rescueService.safetyNets.service.FirestationServiceImpl;
 import com.rescueService.safetyNets.service.MedicalrecordService;
-import com.rescueService.safetyNets.service.MedicalrecordServiceImpl;
 
  
 

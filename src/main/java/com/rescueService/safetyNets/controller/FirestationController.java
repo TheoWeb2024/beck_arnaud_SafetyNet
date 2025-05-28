@@ -1,11 +1,9 @@
 package com.rescueService.safetyNets.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rescueService.safetyNets.model.Firestation;
-import com.rescueService.safetyNets.model.Person;
 import com.rescueService.safetyNets.service.FirestationService;
 import com.rescueService.safetyNets.service.FirestationServiceImpl;
-import com.rescueService.safetyNets.service.PersonServiceImpl;
 
 
 @RestController

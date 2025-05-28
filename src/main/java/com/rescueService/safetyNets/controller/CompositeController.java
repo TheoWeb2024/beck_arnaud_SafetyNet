@@ -17,7 +17,6 @@ import com.rescueService.safetyNets.service.PersonService;
 
 
 @RestController
-// @RequestMapping("")
 public class CompositeController {
 	
 		@Autowired

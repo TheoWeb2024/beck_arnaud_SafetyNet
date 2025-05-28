@@ -20,8 +20,6 @@ import com.rescueService.safetyNets.model.Person;
 
 import lombok.Data;
 
-
-
 @Data
 @Service
 public class FirestationServiceImpl implements FirestationService{
@@ -169,7 +167,6 @@ public class FirestationServiceImpl implements FirestationService{
 		
 	}
 	
-
 	@Override
 	public List<Firestation> deleteFirestation(int id) {
 		logger.info("delete data in new Json file for firestation");
