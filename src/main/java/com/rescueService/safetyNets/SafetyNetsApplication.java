@@ -24,17 +24,13 @@ import lombok.Data;
 @SpringBootApplication
 public class SafetyNetsApplication implements CommandLineRunner {
 	
-	
-	
-	private static final Logger logger = LogManager.getLogger(SafetyNetsApplication.class);
+private static final Logger logger = LogManager.getLogger(SafetyNetsApplication.class);
 
-	
-	
 public static void main(String[] args) throws IOException, java.text.ParseException  {
 		SpringApplication.run(SafetyNetsApplication.class, args);
 		logger.info("Initializing safetyNets Application");
 }
-
+ 
 		@Override
 			public void run(String... args) throws Exception {
 				// TODO Auto-generated method stub		
