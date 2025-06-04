@@ -18,17 +18,9 @@ https://www.oracle.com/fr/java/technologies/downloads/
 https://maven.apache.org/install.html
 
 In order to use to the API, use the port 8080 in your browser or Postman. Then, you'll access to different data with URLs such as : 
-http://localhost:8080/firestation?stationNumber=<station_number>
-http://localhost:8080/childAlert?address=<address>
-http://localhost:8080/phoneAlert?firestation=<firestation_number>
-http://localhost:8080/fire?address=<address>
-http://localhost:8080/flood/stations?stations=<station_number>
-http://localhost:8080/personInfolastName=<lastName>
-http://localhost:8080/communityEmail?city=<city>
+http://localhost:8080/firestation?stationNumber=<station_number> ; http://localhost:8080/childAlert?address=<address> ; http://localhost:8080/phoneAlert?firestation=<firestation_number> ; http://localhost:8080/fire?address=<address> ; http://localhost:8080/flood/stations?stations=<station_number> ; http://localhost:8080/personInfolastName=<lastName> ; http://localhost:8080/communityEmail?city=<city> ; 
 or Endpoints :
-http://localhost:8080/person
-http://localhost:8080/firestation
-http://localhost:8080/medicalRecord
+http://localhost:8080/person ; http://localhost:8080/firestation ; http://localhost:8080/medicalRecord
 
 
 Running App
