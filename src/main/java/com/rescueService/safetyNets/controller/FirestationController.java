@@ -34,14 +34,13 @@ public class FirestationController {
 	public  List<Firestation> getFirestations(){
 		FirestationServiceImpl fireSI = new FirestationServiceImpl();
 		List<Firestation> firestationa =  fireSI.readJsonFileForFirestations();
-		
 		logger.info ("FirestationController read");
-		
-	return  firestationa;
+		return  firestationa;
 	}
 	
 	@PutMapping("/update/{address}")
 	public List<Firestation> updateFirestation(@RequestBody Firestation firestation) {
+		logger.info("FirestationController update");
 		return firestationService.updateFirestation(firestation);
 	}
 	
@@ -53,7 +52,7 @@ public class FirestationController {
 
 	@DeleteMapping("/delete/{id}")
 	public List<Firestation> delete(@PathVariable int id) {
-		logger.info ("Firestationdelete station_number");
+		logger.info ("FirestationController delete");
 		return firestationService.deleteFirestation(id);
 	}
 }

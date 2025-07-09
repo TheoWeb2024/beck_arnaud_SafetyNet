@@ -18,7 +18,7 @@ public class Person {
 		
 	}
 
-	private String id;
+	private int id;
 
 	private String address;
 	
