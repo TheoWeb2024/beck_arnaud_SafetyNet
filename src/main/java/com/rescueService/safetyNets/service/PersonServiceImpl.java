@@ -252,15 +252,16 @@ public class PersonServiceImpl implements PersonService {
 						String firsta= pers.getFirstName();
 						 String lasta = pers.getLastName();
 						 String phona = pers.getPhone();
+						 int age = pers.ageCalculated();
 						JsonNode medica = pers.getMedications();
 						JsonNode allergia =  pers.getAllergies();
-						returnValue.add(numerota + " " + firsta + " " + lasta + " " + phona  + " " + medica + " " + allergia);	
+						returnValue.add(numerota + " " + lasta + " " + age + " " + phona  + " " + medica + " " + allergia);	
 					}
 				}
 			}
 		}
 			return returnValue ;
-		}
+	}
 
 	@Override
 	public List<String> getFamilyAroundFirestationWithMedicalrecords(int stationNumber) {
@@ -288,6 +289,6 @@ public class PersonServiceImpl implements PersonService {
 				}
 			}
 		}
-	return returnValue ;
+		return returnValue ;
 	}
 }

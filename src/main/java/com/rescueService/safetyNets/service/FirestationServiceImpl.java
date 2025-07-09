@@ -19,7 +19,7 @@ import com.rescueService.safetyNets.model.Firestation;
 import com.rescueService.safetyNets.model.Person;
 
 import lombok.Data;
-
+ 
 @Data
 @Service
 public class FirestationServiceImpl implements FirestationService{

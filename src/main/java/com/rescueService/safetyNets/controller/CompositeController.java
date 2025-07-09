@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,14 +27,13 @@ public class CompositeController {
 		@Autowired
 		private MedicalrecordService medicalrecordService;
 	
-		
+		 
 		@GetMapping("/firestation")
 		//public String checkStationFromNumber(@PathVariable String station_number) {
 		public List<String> checkStationFromNumber(@RequestParam int stationNumber) {
 			return firestationService.checkStationFromNumber(stationNumber);
 		}
 		 
-	
 		@GetMapping("/childAlert")
 		public List<String> getChildrenAndFamilyLeavingAtOneAddress (@RequestParam String address) {
 			return personService.getChildrenAndFamilyLeavingAtOneAddress(address);
@@ -61,9 +61,11 @@ public class CompositeController {
 		}
 		
 		@GetMapping("/communityEmail")
+		//@GetMapping(value = "/communityEmail", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 		public List<String> getEmailFromAllPersonsOfCity (@RequestParam String city) {
 			return personService.getEmailFromAllPersonsOfCity(city);
 		}
+		
 }
 
  
