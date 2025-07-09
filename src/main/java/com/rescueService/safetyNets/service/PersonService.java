@@ -5,6 +5,10 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
+import com.rescueService.safetyNets.dto.ChildrenAndFamilyDto;
+import com.rescueService.safetyNets.dto.EmailPersonDto;
+import com.rescueService.safetyNets.dto.FloodStationsDto;
+import com.rescueService.safetyNets.dto.PersonDto;
 import com.rescueService.safetyNets.model.Person;
 
 
@@ -18,13 +22,13 @@ public interface PersonService {
 	
 	List<Person> deletePerson (String email);
 
-	Stream<Person> getInfoFromOnePerson(String lastName);
+	Stream<PersonDto> getInfoFromOnePerson(String lastName);
 
-	List<String> getEmailFromAllPersonsOfCity(String city) ;
+	List<EmailPersonDto> getEmailFromAllPersonsOfCity(String city) ;
 	
-	List<String> getChildrenAndFamilyLeavingAtOneAddress(String address);
+	Stream<Object> getChildrenAndFamilyLeavingAtOneAddress(String address);
 
-	List<String> getPersonAroundFirestationWithMedicalrecords(String address);
+	Stream<Object> getPersonAroundFirestationWithMedicalrecords(String address);
 	
-	List<String> getFamilyAroundFirestationWithMedicalrecords(int stationNumber);
+	List<FloodStationsDto> getFamilyAroundFirestationWithMedicalrecords(int stationNumber);
 }

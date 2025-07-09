@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,6 +17,10 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rescueService.safetyNets.SafetyNetsApplication;
+import com.rescueService.safetyNets.dto.CheckStationFromNumberDto;
+import com.rescueService.safetyNets.dto.CheckStationFromNumberServiceMapperDto;
+import com.rescueService.safetyNets.dto.PhoneFromAroundFirestationDto;
+import com.rescueService.safetyNets.dto.PhoneFromAroundFirestationServiceMapperDTO;
 import com.rescueService.safetyNets.model.Firestation;
 import com.rescueService.safetyNets.model.Person;
 
@@ -28,6 +34,9 @@ public class FirestationServiceImpl implements FirestationService{
 
 	@Autowired
 	private PersonServiceImpl personServiceImpl;
+	
+	private final CheckStationFromNumberServiceMapperDto checkStationFromNumberServiceMapperDto;
+	private final PhoneFromAroundFirestationServiceMapperDTO phoneFromAroundFirestationServiceMapperDTO;
 	
 		List<Firestation> firestations = new ArrayList<>();
 
@@ -64,6 +73,7 @@ public class FirestationServiceImpl implements FirestationService{
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				logger.error("Can't read data from Json file");
 				
 			}
 			return firestations ;
@@ -120,7 +130,7 @@ public class FirestationServiceImpl implements FirestationService{
 				if (firestations.get(i).getId() > index) {
 					index = firestations.get(i).getId();
 				}
-			
+			 
 			}
 			firestation.setId(index+1);
 			firesData.add(firestation);
@@ -164,7 +174,6 @@ public class FirestationServiceImpl implements FirestationService{
 		writeJSONData(firesData);
 		
 		return updatedFirestation;
-		
 	}
 	
 	@Override
@@ -181,60 +190,58 @@ public class FirestationServiceImpl implements FirestationService{
 	}
 
 	@Override
-	public List<String> checkStationFromNumber(int stationNumber) {
-		int nbPersonnes = 0;
+	public List<CheckStationFromNumberDto> checkStationFromNumber(int stationNumber) {
+		logger.info("Checking station from number");
+		List<Firestation> result = new ArrayList<>();
+		//Stream<ChildrenAndFamilyDto> psi = null;
 		PersonServiceImpl personDatas = new PersonServiceImpl();
 		List<Person> psi = personDatas.readJsonFileForPersonsWithBirthDateAndMedAndAllergies();
-		FirestationServiceImpl firestationsDatas = new FirestationServiceImpl();
-		List<Firestation> fireData = firestationsDatas.readJsonFileForFirestations();
-		List<String> returnValue = new ArrayList<>();
-		String firstName=new String();
-		String lastName=new String();
-		String address=new String();
-		String phone=new String();
-		
+		List<Firestation> fireData = readJsonFileForFirestations();
+		List<CheckStationFromNumberDto> returnValue = new ArrayList<>();
+		//Stream<Object> phoneAroundFirestation=null;
+	
 		for(Firestation firest : fireData)  {
 			if(firest.getStationNumber()==(stationNumber)) {
-				for(Person pers : psi) {
-					if(	pers.getAddress().equals(firest.getAddress())) {
-						firstName = pers.getFirstName();
-						lastName = pers.getLastName();
-						address = pers.getAddress();
-						phone = pers.getPhone();
-						returnValue.add(firstName + " " + lastName + " " + address + " " + phone);
-					}
-				}
-			
-			}	
-		}	
+			result.add(firest);
+				returnValue.addAll(psi
+						.stream()
+						.filter(pers-> pers.getAddress().equalsIgnoreCase(firest.getAddress()))
+						.map(checkStationFromNumberServiceMapperDto)
+						.collect(Collectors.toList()));
+			}
+		}
 		return returnValue ;
 	}
 	
 	@Override
-	public List<String> checkPhoneFromAroundFirestation(int stationNumber) {
+	public List<PhoneFromAroundFirestationDto> checkPhoneFromAroundFirestation(int stationNumber) {
+		logger.info("Checking phone number from around firestation");
 		PersonServiceImpl personDatas = new PersonServiceImpl();
-		FirestationServiceImpl firestationsDatas = new FirestationServiceImpl();
 		List<Person> psi = personDatas.readJsonFileForPersonsWithBirthDateAndMedAndAllergies();
-		List<Firestation> fireData = firestationsDatas.readJsonFileForFirestations();
-		List<String> returnValue = new ArrayList<>();
-		String phone = new String();
-		
+		List<Firestation> fireData = readJsonFileForFirestations();
+		List<PhoneFromAroundFirestationDto> returnValue = new ArrayList<>();
+		Stream<Object> phoneAroundFirestation=null;
+	
 		for(Firestation firest : fireData)  {
 			if(firest.getStationNumber()==(stationNumber)) {
-				for(Person pers : psi) {
-					if(	pers.getAddress().equals(firest.getAddress())) {
-						phone = pers.getPhone();
-						returnValue.add(phone);
-						
-					}
-				}
-			
-			}	
-		}	
+				returnValue.addAll(psi
+						.stream()
+						.filter(pers-> pers.getAddress().equalsIgnoreCase(firest.getAddress()))
+						.map(phoneFromAroundFirestationServiceMapperDTO)
+						.collect(Collectors.toList()));
+			}
+		}
 		return returnValue ;
 	}
-}
 
+	
+	
+	public FirestationServiceImpl() {
+		this.checkStationFromNumberServiceMapperDto = new CheckStationFromNumberServiceMapperDto();
+		this.phoneFromAroundFirestationServiceMapperDTO = new PhoneFromAroundFirestationServiceMapperDTO();
+		
+	}
+}
 
 
 
