@@ -157,12 +157,8 @@ public class MedicalrecordServiceImpl implements MedicalrecordService {
 	
 	@Override
 	public List<Medicalrecord>  deleteMedicalrecord(String lastName, String firstName) {
-		//String lastName1 = (lastName.substring(0, 1).toUpperCase() + lastName.substring(1).toLowerCase()) ;
-		//String firstName1 = (lastName.substring(0, 1).toUpperCase() + lastName.substring(1).toLowerCase()) ;
-		logger.info("delete data in Json file in medical record");
 		List<Medicalrecord>  deletedMedical = new ArrayList<>();
 		List<Medicalrecord> medicalData = readJsonFileForMedicalrecords();
-		//medicalData.removeIf((pers -> pers.getLastName().equals(lastName1)) && ((pers.getLastName().equals(firstName1)))) ;
 		if(medicalData != null) {
 		Predicate <Medicalrecord> condition1 = medi -> medi.getLastName().equalsIgnoreCase(lastName); 
 		Predicate<Medicalrecord> condition2 = medi -> medi.getFirstName().equalsIgnoreCase(firstName);

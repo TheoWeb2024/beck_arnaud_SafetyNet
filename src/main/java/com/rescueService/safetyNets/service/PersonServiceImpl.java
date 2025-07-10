@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -15,19 +14,16 @@ import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rescueService.safetyNets.SafetyNetsApplication;
-import com.rescueService.safetyNets.dto.ChildrenAndFamilyDto;
+import com.rescueService.safetyNets.dto.ChildrenAndFamilyMapperServiceDTO;
 import com.rescueService.safetyNets.dto.EmailMapperServiceDTO;
 import com.rescueService.safetyNets.dto.EmailPersonDto;
-import com.rescueService.safetyNets.dto.FireDto;
 import com.rescueService.safetyNets.dto.FloodStationsDto;
 import com.rescueService.safetyNets.dto.FloodStationsMapperServiceDTO;
-import com.rescueService.safetyNets.dto.ParentsDto;
 import com.rescueService.safetyNets.dto.PersonDto;
 import com.rescueService.safetyNets.dto.PersonMapperServiceDTO;
 import com.rescueService.safetyNets.model.Firestation;
@@ -43,14 +39,16 @@ public class PersonServiceImpl implements PersonService {
 	private final PersonMapperServiceDTO personMapperServiceDTO;
 	private final EmailMapperServiceDTO emailMapperServiceDTO;
 	private final FloodStationsMapperServiceDTO floodStationsMapperServiceDTO;
+	private final ChildrenAndFamilyMapperServiceDTO childrenAndFamilyMapperServiceDTO;
 	
 	private static final Logger logger = LogManager.getLogger(SafetyNetsApplication.class);
+	
+	List<Person>persons = new ArrayList<>();
 	
 	@Override
 	public boolean addPerson(Person person) {
 		logger.info("Add one person in new Json file");
-		//boolean addedPerson = true;
-		
+			
 		List<Person> personData = readJsonFileForPersonsWithBirthDateAndMedAndAllergies();
 		
 		logger.info("Adding one person in PersonServiceImpl");
@@ -63,26 +61,41 @@ public class PersonServiceImpl implements PersonService {
 		if(dateConverted > currentDate) {
 			return false;
 		}else {
-			Predicate <Person> condition1 = pers -> pers.getLastName().equalsIgnoreCase(person.getLastName()); 
-			Predicate<Person> condition2 = pers -> pers.getFirstName().equalsIgnoreCase(person.getFirstName());
-			Predicate<Person> condition3 = pers -> pers.getEmail().equals(person.getEmail());
-			personData.removeIf(condition1.and(condition2).and(condition3));
-			personData.add(person);
 		
-			writeJSONData(personData);
+			Person personPresent = null ;
+			if(personData != null) {
+				Predicate <Person> condition1 = pers -> pers.getLastName().equalsIgnoreCase(person.getLastName()); 
+				Predicate<Person> condition2 = pers -> pers.getFirstName().equalsIgnoreCase(person.getFirstName());
+				Predicate<Person> condition3 = pers -> pers.getEmail().equals(person.getEmail());
+				personData.removeIf(condition1.and(condition2).and(condition3));
+			}
+			else  {
+				personData = new ArrayList<>();
+			}
+			if(personPresent == null) {
+				
+				int index=0;
+				for( int i=0;i<persons.size();i++) {
+					if (persons.get(i).getId() > index) {
+						index = persons.get(i).getId();
+					}
+				 
+				}
+				person.setId(index+1);
+				personData.add(person);
+			}
+			writeJSONData(personData);	
 		}
 		
 		return true;
 	}
 	
 	public List<Person> readJsonFileForPersonsWithBirthDateAndMedAndAllergies() {
-						
-			List<Person>persons = new ArrayList<>();
+		
 			File file = new File("src/main/resources/templates/data.json");
 			try {
 			ObjectMapper mapper = new ObjectMapper();
 			JsonNode jsonNode=mapper.readValue(file, JsonNode.class);
-			//String jsonString = mapper.writeValueAsString(jsonNode);
 			JsonNode persone = jsonNode.get("persons");
 			JsonNode medic = jsonNode.get("medicalrecords");
 		
@@ -174,7 +187,11 @@ public class PersonServiceImpl implements PersonService {
 		else 
 			personData = new ArrayList<>();
 	
-		if(personPresent == null) {
+		int i =0;
+		for( i=0;i<persons.size();i++) {
+			persons.get(i);
+		}
+			person.setId(i);
 			person.setAddress(person.getAddress());
 			person.setEmail(person.getEmail());
 			person.setZip(person.getZip());
@@ -186,7 +203,7 @@ public class PersonServiceImpl implements PersonService {
 			personData.add(person);
 			
 		writeJSONData(personData);
-		}
+		
 		return updatedPerson;
 	}
 
@@ -204,11 +221,11 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public List<EmailPersonDto> getEmailFromAllPersonsOfCity(String city) {
 		logger.info("Getting email from persons");
-		List<PersonDto> infoFromOnePerson = new ArrayList<>();
-		String lastName1 = (city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase()) ;
+		
 		List<Person> persone = readJsonFileForPersonsWithBirthDateAndMedAndAllergies();
 		List<EmailPersonDto> personData = persone
 					.stream()
+					.filter(pers -> pers.getCity().equalsIgnoreCase(city))
 					.map(emailMapperServiceDTO)
 					.distinct()
 					.collect(Collectors.toList());
@@ -221,7 +238,6 @@ public class PersonServiceImpl implements PersonService {
 		logger.info("Getting family infos in PersonServiceImpl");
 		List<Person> listOfChildrenAndAdult = readJsonFileForPersonsWithBirthDateAndMedAndAllergies();
 		Stream<Object> childrenAndAdult = null;
-		List<ParentsDto> parentName = getAdultsLivingAtSameAddress(address);
 	
 		for(Person personaFamily : listOfChildrenAndAdult) {
 			if(!personaFamily.isAdult()) {
@@ -229,8 +245,7 @@ public class PersonServiceImpl implements PersonService {
 						.stream()
 						.filter(pers -> pers.ageCalculated()<18)
 						.filter(pers -> pers.getAddress().equalsIgnoreCase(address))
-						.map(person -> new ChildrenAndFamilyDto( person.getFirstName(),person.getLastName(),
-								person.ageCalculated(), parentName));
+						.map(childrenAndFamilyMapperServiceDTO);
 			}
 		}
 		return childrenAndAdult;
@@ -248,25 +263,6 @@ public class PersonServiceImpl implements PersonService {
 			firest.getAddress();
 			int numerota = firest.getStationNumber();
 			if(firest.getAddress().equalsIgnoreCase(address)) {
-<<<<<<< HEAD
-				for(Person pers : personData) {
-					pers.getAddress();
-					if(	pers.getAddress().equalsIgnoreCase(address)) {
-						String firsta= pers.getFirstName();
-						 String lasta = pers.getLastName();
-						 String phona = pers.getPhone();
-						 int age = pers.ageCalculated();
-						JsonNode medica = pers.getMedications();
-						JsonNode allergia =  pers.getAllergies();
-						returnValue.add(numerota + " " + lasta + " " + age + " " + phona  + " " + medica + " " + allergia);	
-					}
-				}
-			}
-		}
-			return returnValue ;
-	}
-
-=======
 				returnValue = personData
 				.stream()
 				.filter(pers -> pers.getAddress().equalsIgnoreCase(address))
@@ -274,9 +270,8 @@ public class PersonServiceImpl implements PersonService {
 			}
 		}
 			return  returnValue ;
-		}
+	}
 		
->>>>>>> dev
 	@Override
 	public List<FloodStationsDto> getFamilyAroundFirestationWithMedicalrecords(int stationNumber) {
 		logger.info("Getting family around firestation with medicals");
@@ -298,43 +293,16 @@ public class PersonServiceImpl implements PersonService {
 								.map(floodStationsMapperServiceDTO)
 								 .collect(Collectors.toList()));
 					}
-<<<<<<< HEAD
-				}
-			}
-		}
-=======
 				}	
->>>>>>> dev
 		return returnValue ;
 	}
 	
-    public List<ParentsDto> getAdultsLivingAtSameAddress(String address) {
-		List<ParentsDto> adultsLivingAtSameAddress = new ArrayList<>();
-		logger.info("Getting parent name method");
-		List<Person> persone = readJsonFileForPersonsWithBirthDateAndMedAndAllergies();
-		for(Person personaFamily : persone) {
-			if(personaFamily.getAddress().equalsIgnoreCase(address) && personaFamily.isAdult()) {
-				adultsLivingAtSameAddress = persone
-						.stream()
-						.filter(person -> person.getAddress().equalsIgnoreCase(address))
-						.filter(person -> person.ageCalculated()>18)
-						.map(person -> new ParentsDto(person.getId(), person.getFirstName(), person.getLastName()))
-				
-						.collect(Collectors.toList());
-			   }
-		
-	    }
-		return adultsLivingAtSameAddress;
-    }
-
 	public PersonServiceImpl() {
 		this.personMapperServiceDTO = new PersonMapperServiceDTO();
 		this.emailMapperServiceDTO = new EmailMapperServiceDTO();
 		this.floodStationsMapperServiceDTO = new FloodStationsMapperServiceDTO();
-	
+		this.childrenAndFamilyMapperServiceDTO = new ChildrenAndFamilyMapperServiceDTO();
 	}
-
-
 
 }
 

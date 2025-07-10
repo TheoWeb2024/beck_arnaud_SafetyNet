@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rescueService.safetyNets.model.Person;
 import com.rescueService.safetyNets.service.PersonService;
-import com.rescueService.safetyNets.service.PersonServiceImpl;
 
 
 @RestController
@@ -27,8 +26,6 @@ public class PersonController {
 	
 	@Autowired
 	 private PersonService personService;
-	@Autowired
-	private PersonServiceImpl personServiceImpl;
 	
 
 	@PutMapping("/update/{lastName}/{firstName}/{birthdate}")
@@ -47,8 +44,7 @@ public class PersonController {
 		logger.info ("Persondelete email");
 		return personService.deletePerson(email);
 	}
-
-	}
+}
 
 
 

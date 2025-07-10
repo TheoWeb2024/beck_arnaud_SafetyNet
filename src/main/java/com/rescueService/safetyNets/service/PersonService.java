@@ -5,7 +5,6 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
-import com.rescueService.safetyNets.dto.ChildrenAndFamilyDto;
 import com.rescueService.safetyNets.dto.EmailPersonDto;
 import com.rescueService.safetyNets.dto.FloodStationsDto;
 import com.rescueService.safetyNets.dto.PersonDto;

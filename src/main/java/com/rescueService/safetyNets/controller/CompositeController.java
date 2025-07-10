@@ -6,23 +6,17 @@ import java.util.stream.Stream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rescueService.safetyNets.SafetyNetsApplication;
 import com.rescueService.safetyNets.dto.CheckStationFromNumberDto;
-import com.rescueService.safetyNets.dto.ChildrenAndFamilyDto;
 import com.rescueService.safetyNets.dto.EmailPersonDto;
 import com.rescueService.safetyNets.dto.FloodStationsDto;
 import com.rescueService.safetyNets.dto.PersonDto;
 import com.rescueService.safetyNets.dto.PhoneFromAroundFirestationDto;
-import com.rescueService.safetyNets.model.Person;
 import com.rescueService.safetyNets.service.FirestationService;
-import com.rescueService.safetyNets.service.MedicalrecordService;
 import com.rescueService.safetyNets.service.PersonService;
 
 
@@ -36,12 +30,10 @@ public class CompositeController {
 		private PersonService personService;
 		@Autowired
 		private FirestationService firestationService;
-		@Autowired
-		private MedicalrecordService medicalrecordService;
+		
 	
-		 
+		
 		@GetMapping("/firestation")
-		//public String checkStationFromNumber(@PathVariable String station_number) {
 		public List<CheckStationFromNumberDto> checkStationFromNumber(@RequestParam int stationNumber) {
 			logger.info("Returning stationNumber regarding address");
 			return firestationService.checkStationFromNumber(stationNumber);
@@ -54,7 +46,6 @@ public class CompositeController {
 		}
 		
 		@GetMapping("/phoneAlert")
-		//@ResponseBody
 		public List<PhoneFromAroundFirestationDto> checkPhoneFromAroundFirestation (@RequestParam int stationNumber) {
 			logger.info("Returning phone Number regarding firestation");
 			return firestationService.checkPhoneFromAroundFirestation(stationNumber);
@@ -79,15 +70,10 @@ public class CompositeController {
 		}
 		
 		@GetMapping("/communityEmail")
-<<<<<<< HEAD
-		//@GetMapping(value = "/communityEmail", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-		public List<String> getEmailFromAllPersonsOfCity (@RequestParam String city) {
-=======
 		public List<EmailPersonDto> getEmailFromAllPersonsOfCity (@RequestParam String city) {
 			logger.info("Returning emails from city");
->>>>>>> dev
 			return personService.getEmailFromAllPersonsOfCity(city);
 		}
-		
 }
+
 

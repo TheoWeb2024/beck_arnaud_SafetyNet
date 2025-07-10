@@ -27,8 +27,6 @@ public class FirestationController {
 	
 	@Autowired
 	private FirestationService firestationService;
-	@Autowired
-	private FirestationServiceImpl firestationServiceImpl;
 
 	@GetMapping("/read")
 	public  List<Firestation> getFirestations(){

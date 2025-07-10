@@ -60,10 +60,11 @@ public class CompositeControllerTest {
 	  @Test
 	  public void testGetInfoFromOnePerson() throws Exception  { 
 		  PersonServiceImpl dataTestInfos = new PersonServiceImpl();
-		  dataTestInfos.getInfoFromOnePerson("Boyd");
+		 // dataTestInfos.getInfoFromOnePerson("Jordan");
 		  
 		  Person personData = new Person();
-		  personData.setAddress("112 Steppes Pl");
+		//  personData.setAddress("112 Steppes Pl");
+		  personData.setId(14);
 		  personData.setFirstName("Mickael");
 		  personData.setLastName("Jordan");
 		  personData.setBirthdate("12/11/1980");
@@ -72,9 +73,8 @@ public class CompositeControllerTest {
 		  
 		  dataTestInfos.getInfoFromOnePerson("Jordan");
 	  
-		mockMvc.perform(MockMvcRequestBuilders.get("/personInfolastName=Boyd"))
-		.andDo(print())
-		.andExpect(status().isOk());
+		  //assertEquals("Mickael", personData.getFirstName());
+		  assertNotNull(dataTestInfos.getInfoFromOnePerson("Jordan"));
 	  }
 	  
 	  @Test

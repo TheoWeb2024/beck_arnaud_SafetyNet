@@ -4,9 +4,14 @@ package com.rescueService.safetyNets.model;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.rescueService.safetyNets.dto.ParentsDto;
+import com.rescueService.safetyNets.service.PersonServiceImpl;
 
 import lombok.Data;
 
@@ -55,6 +60,24 @@ public class Person {
 	       return period ;
 	 }
 
+    public List<ParentsDto> getAdultsLivingAtSameAddress(String address) {
+    	PersonServiceImpl peper = new PersonServiceImpl();
+		List<ParentsDto> adultsLivingAtSameAddress = new ArrayList<>();
+		List<Person> persone = peper.readJsonFileForPersonsWithBirthDateAndMedAndAllergies();
+		for(Person personaFamily : persone) {
+			if(personaFamily.getAddress().equalsIgnoreCase(address) && personaFamily.isAdult()) {
+				adultsLivingAtSameAddress = persone
+						.stream()
+						.filter(person -> person.getAddress().equalsIgnoreCase(address))
+						.filter(person -> person.ageCalculated()>18)
+						.map(person -> new ParentsDto(person.getId(), person.getFirstName(), person.getLastName()))
+				
+						.collect(Collectors.toList());
+			   }
+		
+	    }
+		return adultsLivingAtSameAddress;
+    }
     
 }
 
