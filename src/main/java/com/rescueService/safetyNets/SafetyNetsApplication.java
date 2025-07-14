@@ -28,4 +28,4 @@ public class SafetyNetsApplication implements CommandLineRunner {
 	// TODO Auto-generated method stub		
 	}
 }
- 
+   

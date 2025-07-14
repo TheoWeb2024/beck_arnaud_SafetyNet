@@ -11,8 +11,6 @@ public record ChildrenAndFamilyDto(
 		int age,
 		 
 	    List<ParentsDto> parents
-	    
-		
 		) {
 		
 }

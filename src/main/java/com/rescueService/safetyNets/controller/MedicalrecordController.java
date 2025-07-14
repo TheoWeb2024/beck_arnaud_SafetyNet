@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rescueService.safetyNets.model.Medicalrecord;
 import com.rescueService.safetyNets.service.MedicalrecordService;
 
- 
 
 @RestController
 @RequestMapping("/medicalRecord")

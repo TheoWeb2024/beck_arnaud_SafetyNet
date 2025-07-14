@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.rescueService.safetyNets.dto.EmailPersonDto;
 import com.rescueService.safetyNets.dto.FloodStationsDto;
 import com.rescueService.safetyNets.dto.PersonDto;
+import com.rescueService.safetyNets.dto.PersonFireDto;
 import com.rescueService.safetyNets.model.Person;
 
 
@@ -27,7 +28,7 @@ public interface PersonService {
 	
 	Stream<Object> getChildrenAndFamilyLeavingAtOneAddress(String address);
 
-	Stream<Object> getPersonAroundFirestationWithMedicalrecords(String address);
+	List<PersonFireDto> getPersonAroundFirestationWithMedicalrecords(String address);
 	
 	List<FloodStationsDto> getFamilyAroundFirestationWithMedicalrecords(int stationNumber);
 }

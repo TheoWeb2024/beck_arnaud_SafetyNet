@@ -44,6 +44,7 @@ public class Person {
     private JsonNode medications;
     
     private JsonNode allergies;
+     
     
     public boolean isAdult() {
 		return ageCalculated()>=18;
@@ -58,7 +59,7 @@ public class Person {
 	       int period = Period.between(formattedDate, currentDate).getYears();
 	       
 	       return period ;
-	 }
+	 } 
 
     public List<ParentsDto> getAdultsLivingAtSameAddress(String address) {
     	PersonServiceImpl peper = new PersonServiceImpl();

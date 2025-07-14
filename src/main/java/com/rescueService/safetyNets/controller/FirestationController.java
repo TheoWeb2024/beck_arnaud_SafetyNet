@@ -18,7 +18,7 @@ import com.rescueService.safetyNets.model.Firestation;
 import com.rescueService.safetyNets.service.FirestationService;
 import com.rescueService.safetyNets.service.FirestationServiceImpl;
 
-
+ 
 @RestController
 @RequestMapping("/firestation")
 public class FirestationController {

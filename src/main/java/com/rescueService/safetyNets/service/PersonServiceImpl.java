@@ -25,13 +25,14 @@ import com.rescueService.safetyNets.dto.EmailPersonDto;
 import com.rescueService.safetyNets.dto.FloodStationsDto;
 import com.rescueService.safetyNets.dto.FloodStationsMapperServiceDTO;
 import com.rescueService.safetyNets.dto.PersonDto;
+import com.rescueService.safetyNets.dto.PersonFireDto;
 import com.rescueService.safetyNets.dto.PersonMapperServiceDTO;
 import com.rescueService.safetyNets.model.Firestation;
 import com.rescueService.safetyNets.model.Person;
 
 import lombok.Data;
 
-
+ 
 @Data
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -43,15 +44,10 @@ public class PersonServiceImpl implements PersonService {
 	
 	private static final Logger logger = LogManager.getLogger(SafetyNetsApplication.class);
 	
-	List<Person>persons = new ArrayList<>();
-	
 	@Override
 	public boolean addPerson(Person person) {
 		logger.info("Add one person in new Json file");
-			
 		List<Person> personData = readJsonFileForPersonsWithBirthDateAndMedAndAllergies();
-		
-		logger.info("Adding one person in PersonServiceImpl");
 		
 		int currentDate = LocalDate.now().getYear();
 		String dateToConvert = person.getBirthdate();
@@ -71,27 +67,25 @@ public class PersonServiceImpl implements PersonService {
 			}
 			else  {
 				personData = new ArrayList<>();
-			}
-			if(personPresent == null) {
-				
+			}	
 				int index=0;
-				for( int i=0;i<persons.size();i++) {
-					if (persons.get(i).getId() > index) {
-						index = persons.get(i).getId();
+				for( int i=0;i<personData.size();i++) {
+					if (personData.get(i).getId() > index) {
+						index = personData.get(i).getId();
 					}
 				 
 				}
 				person.setId(index+1);
 				personData.add(person);
-			}
-			writeJSONData(personData);	
 		}
+			writeJSONData(personData);	
+		
 		
 		return true;
 	}
 	
 	public List<Person> readJsonFileForPersonsWithBirthDateAndMedAndAllergies() {
-		
+			List<Person>persons = new ArrayList<>();
 			File file = new File("src/main/resources/templates/data.json");
 			try {
 			ObjectMapper mapper = new ObjectMapper();
@@ -134,7 +128,7 @@ public class PersonServiceImpl implements PersonService {
 					}
 			
 				}
-
+ 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -171,13 +165,14 @@ public class PersonServiceImpl implements PersonService {
 	@Override
 	public List<Person> updatePerson(Person person) {
 		logger.info("Updating a person");
+		List<Person>persons = new ArrayList<>();
 		List<Person> updatedPerson = new ArrayList<>();
 		List<Person> personData = readJsonFileForPersonsWithBirthDateAndMedAndAllergies();
 
 		logger.info("Updating person in PersonServiceImpl");
 		Person personPresent = null;
 				
-		if(personData != null)  {
+		if(personData != null)  { 
 		
 		Predicate <Person> condition1 = pers -> pers.getLastName().equalsIgnoreCase(person.getLastName());
 		Predicate<Person> condition2 = pers -> pers.getFirstName().equalsIgnoreCase(person.getFirstName());
@@ -252,21 +247,21 @@ public class PersonServiceImpl implements PersonService {
 	}
 	
 	@Override
-	public Stream<Object> getPersonAroundFirestationWithMedicalrecords(String address) {
+	public List<PersonFireDto> getPersonAroundFirestationWithMedicalrecords(String address) {
 		logger.info("Getting person around firestation with medicals");
 		FirestationServiceImpl readFire = new FirestationServiceImpl();
 		List<Person> personData = readJsonFileForPersonsWithBirthDateAndMedAndAllergies();
 		List<Firestation> fireData = readFire.readJsonFileForFirestations();
-		Stream<Object>returnValue = null;
+		List<PersonFireDto>returnValue = null;
 		
 		for(Firestation firest : fireData)  {
 			firest.getAddress();
-			int numerota = firest.getStationNumber();
 			if(firest.getAddress().equalsIgnoreCase(address)) {
 				returnValue = personData
 				.stream()
 				.filter(pers -> pers.getAddress().equalsIgnoreCase(address))
-				.map(floodStationsMapperServiceDTO);
+				.map(this::convertDataToDto)
+				.collect(Collectors.toList());
 			}
 		}
 			return  returnValue ;
@@ -282,7 +277,6 @@ public class PersonServiceImpl implements PersonService {
 		
 		List<String> fired = new ArrayList<>();
 		for(Firestation firest : fireData)  {
-			//firest.getAddress();
 			if(firest.getStationNumber()==(stationNumber)) {
 				firest.getAddress();
 				fired.add(firest.getAddress());
@@ -294,7 +288,26 @@ public class PersonServiceImpl implements PersonService {
 								 .collect(Collectors.toList()));
 					}
 				}	
-		return returnValue ;
+		return returnValue ; 
+	}
+	
+	private PersonFireDto convertDataToDto(Person person) {
+		FirestationServiceImpl firestation = new FirestationServiceImpl();
+		List<Firestation> data = firestation.readJsonFileForFirestations();
+		int dating = 0;
+		for(Firestation dat:data) {
+			if(person.getAddress().equalsIgnoreCase(dat.getAddress()))
+			 dating = dat.getStationNumber();
+		}
+		PersonFireDto fireDto = new PersonFireDto();
+		fireDto.setStationNumber(dating);
+		fireDto.setFirstName(person.getFirstName());
+		fireDto.setLastName(person.getLastName());
+		fireDto.setPhone(person.getPhone());
+		fireDto.setAge(person.ageCalculated());
+		fireDto.setAllergies(person.getAllergies());
+		fireDto.setMedications(person.getMedications());
+		return fireDto;
 	}
 	
 	public PersonServiceImpl() {

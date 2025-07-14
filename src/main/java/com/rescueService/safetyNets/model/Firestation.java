@@ -8,7 +8,6 @@ import lombok.Data;
 public class Firestation {
 	
 
-
 	private int id;
 
     private String address;

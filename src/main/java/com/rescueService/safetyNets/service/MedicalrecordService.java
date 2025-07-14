@@ -15,8 +15,6 @@ public interface MedicalrecordService {
 
 	List<Medicalrecord> getInfoFromMedicalrecord(String lastName);
 
-	List<Person> getAllergies(String birthdate);
-
 }
 
 

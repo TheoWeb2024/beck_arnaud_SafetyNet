@@ -6,8 +6,6 @@ public record PhoneFromAroundFirestationDto(
 	
 	     String lastName,
 	
-	     String phone
-	   
-		) {
+	     String phone) {
 
 }

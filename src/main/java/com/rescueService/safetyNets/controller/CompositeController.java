@@ -15,6 +15,7 @@ import com.rescueService.safetyNets.dto.CheckStationFromNumberDto;
 import com.rescueService.safetyNets.dto.EmailPersonDto;
 import com.rescueService.safetyNets.dto.FloodStationsDto;
 import com.rescueService.safetyNets.dto.PersonDto;
+import com.rescueService.safetyNets.dto.PersonFireDto;
 import com.rescueService.safetyNets.dto.PhoneFromAroundFirestationDto;
 import com.rescueService.safetyNets.service.FirestationService;
 import com.rescueService.safetyNets.service.PersonService;
@@ -31,7 +32,6 @@ public class CompositeController {
 		@Autowired
 		private FirestationService firestationService;
 		
-	
 		
 		@GetMapping("/firestation")
 		public List<CheckStationFromNumberDto> checkStationFromNumber(@RequestParam int stationNumber) {
@@ -52,7 +52,7 @@ public class CompositeController {
 		}
 		
 		@GetMapping("/fire")
-		public Stream<Object> getPersonAroundFirestationWithMedicalrecords (@RequestParam String address) {
+		public List<PersonFireDto> getPersonAroundFirestationWithMedicalrecords (@RequestParam String address) {
 			logger.info("Returning one person with medicals around firestation");
 			return personService.getPersonAroundFirestationWithMedicalrecords(address);
 		}
@@ -76,4 +76,4 @@ public class CompositeController {
 		}
 }
 
-
+ 

@@ -19,8 +19,6 @@ public record PersonDto(
 	     
 	     JsonNode medications,
 		    
-	     JsonNode allergies
-	 
-		) {
+	     JsonNode allergies) {
 	
 }

@@ -169,12 +169,6 @@ public class MedicalrecordServiceImpl implements MedicalrecordService {
 		return deletedMedical;
 		}
 
-	@Override
-	public List<Person> getAllergies(String birthdate) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }
 	
 	

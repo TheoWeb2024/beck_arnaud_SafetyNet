@@ -5,7 +5,6 @@ public record ParentsDto(
 			
 		 String firstName,
 
-	     String lastName
-	     ) {
+	     String lastName) {
 
 }

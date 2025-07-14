@@ -7,11 +7,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.maven.model.superpom.DefaultSuperPomProvider;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.rescueService.safetyNets.dto.ChildrenAndFamilyDto;
+import com.rescueService.safetyNets.dto.ParentsDto;
+import com.rescueService.safetyNets.dto.PersonDto;
 import com.rescueService.safetyNets.model.Firestation;
 import com.rescueService.safetyNets.model.Person;
 
@@ -39,12 +43,12 @@ class PersonServiceImplTest {
 	public void testWriteJSONData() {
 		List<Person>personDatas = new ArrayList<>();
 		Person testNewPersonToWrite = new Person();
-		testNewPersonToWrite.setFirstName("Jordan");
+		testNewPersonToWrite.setFirstName("Jordan"); 
 		testNewPersonToWrite.setLastName("Turner");
 		testNewPersonToWrite.setAddress("205 Peugeot St");
 		testNewPersonToWrite.setCity("Carcity");
 		personDatas.add(testNewPersonToWrite);
-		
+	
 		PersonServiceImpl testWriteDataInFile = new PersonServiceImpl();
 		List<Person> personsWritedInFile = testWriteDataInFile.writeJSONData(personDatas);
 		String resultAddressNewPerson=null;
@@ -72,6 +76,17 @@ class PersonServiceImplTest {
 	}
 	
 	@Test
+	public void testGetInfoFromOnePerson2() {
+		PersonServiceImpl testDataReadingFile = new PersonServiceImpl();
+		
+		PersonDto perp = new PersonDto( 25, "Pretorius","Mozart", "1011 Sonate St", 25, "mozart@gemail.com",null, null);
+		testDataReadingFile.getInfoFromOnePerson("1011 Sonate St");
+		
+		assertEquals("1011 Sonate St", perp.address());
+		
+	}
+	
+	@Test
 	public void testGetEmailFromAllPersonsOfCity() {
 		String cityComingFromList = new String();
 		PersonServiceImpl testDataReadingFile = new PersonServiceImpl();
@@ -96,6 +111,7 @@ class PersonServiceImplTest {
 		testNewPersonIfChildren.setLastName("Mozart");
 		testNewPersonIfChildren.setAddress("1001 Sonate St");
 		testNewPersonIfChildren.setBirthdate("10/10/2019");
+		testNewPersonIfChildren.isAdult();
 		personDatas.add(testNewPersonIfChildren);
 		boolean children = false;
 		
@@ -104,10 +120,35 @@ class PersonServiceImplTest {
 		for(Person pers:personDatas) {
 			 lastNamePersonalities = pers.getLastName();
 			personalities.add(pers);
-		}
+			
+		ParentsDto per = new ParentsDto(0,  "Edouard", "Mozart");
 		
-		//assertTrue(children=true);
-		assertEquals("Mozart", lastNamePersonalities);
+		assertEquals(testNewPersonIfChildren.getLastName(), per.lastName());
+		}
+	}
+	
+	@Test
+	public void testGetChildrenAndFamilyLeavingAtOneAddress2() {
+		List<Person>personDatas = new ArrayList<>();
+		Person per = new Person();
+		per.setFirstName("Wolfgang");
+		per.setLastName("Mozart");
+		per.setAddress("1001 Sonate St");
+		per.setBirthdate("10/10/1950");
+		per.isAdult();
+		personDatas.add(per);
+		boolean children = false;
+		
+		String lastNamePersonalities = new String();
+		List<Person>personalities = new ArrayList<>();
+		for(Person pers:personDatas) {
+			 lastNamePersonalities = pers.getLastName();
+			personalities.add(pers);
+			
+		ChildrenAndFamilyDto perp = new ChildrenAndFamilyDto( "Pretorius","Mozart", 12, null);
+		
+		assertEquals(per.getLastName(), perp.lastNameChildren());
+		}
 	}
 	
 	@Test
@@ -205,6 +246,20 @@ class PersonServiceImplTest {
 		
 		//assertEquals("",testFire);
 		assertNotNull(personperson.getEmail());
+	}	
+	
+	@Test
+	public void testGetAdultsLivingAtSameAddress() {
+		List<Person> personListed = new ArrayList<>();
+		Person personperson = new Person();
+		personperson.setFirstName("Eddy");
+		personperson.setLastName("Jordan");
+		personperson.setBirthdate("03/03/2020");
+		personperson.setAddress("20 rue Paradis");
+		personListed.add(personperson);
+		personperson.getAdultsLivingAtSameAddress("20 rue Paradis");
+
+		assertNotNull(personperson.getAddress());
 	}	
 }
 

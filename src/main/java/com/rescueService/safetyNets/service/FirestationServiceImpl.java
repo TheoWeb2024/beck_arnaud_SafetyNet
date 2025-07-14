@@ -38,13 +38,12 @@ public class FirestationServiceImpl implements FirestationService{
 	private final CheckStationFromNumberServiceMapperDto checkStationFromNumberServiceMapperDto;
 	private final PhoneFromAroundFirestationServiceMapperDTO phoneFromAroundFirestationServiceMapperDTO;
 	
+
+	public List<Firestation> readJsonFileForFirestations() {
 		List<Firestation> firestations = new ArrayList<>();
-
-		public List<Firestation> readJsonFileForFirestations() {
-
-			logger.info("Read existing Json file for firestation");
-			File file = new File("src/main/resources/templates/data.json");
-			try {
+		logger.info("Read existing Json file for firestation");
+		File file = new File("src/main/resources/templates/data.json");
+		try {
 				ObjectMapper mapper = new ObjectMapper();
 				JsonNode jsonNode=mapper.readValue(file, JsonNode.class);
 				JsonNode fire = jsonNode.get("firestations");
@@ -52,32 +51,32 @@ public class FirestationServiceImpl implements FirestationService{
 				Iterator iterator = fire.iterator(); 
 			
 				while (iterator.hasNext()) { 
-					JsonNode objInner = (JsonNode) iterator.next();
+				JsonNode objInner = (JsonNode) iterator.next();
 					
-					int stat = (objInner.get("station")).asInt();
+				int stat = (objInner.get("station")).asInt();
 			
-					String address = (objInner.get("address").toString()).replace("\"","");
+				String address = (objInner.get("address").toString()).replace("\"","");
 				
-					Firestation firestation = new Firestation();
-					int i =0;
-					for( i=0;i<firestations.size();i++) {
-						firestations.get(i);
-					}
-					firestation.setId(i);
-					firestation.setStationNumber(stat);
-					firestation.setAddress(address);
-					
-					firestations.add(firestation);
-									    
+				Firestation firestation = new Firestation();
+				int i =0;
+				for( i=0;i<firestations.size();i++) {
+				firestations.get(i);
 				}
+				firestation.setId(i);
+				firestation.setStationNumber(stat);
+				firestation.setAddress(address);
+					
+				firestations.add(firestation);
+									    
+			} 
 
-			} catch (Exception e) {
-				e.printStackTrace();
-				logger.error("Can't read data from Json file");
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("Can't read data from Json file");
 				
-			}
-			return firestations ;
 		}
+		return firestations ;
+	}
 
 	public  List<Firestation> writeJSONData(List<Firestation> firestationData)  {
 		
@@ -96,49 +95,47 @@ public class FirestationServiceImpl implements FirestationService{
 		
 	@Override
 	public boolean addFirestation(Firestation firestation) {
-		
-		List<Firestation> updatedFirestation = new ArrayList<>();
+		logger.info("Adding firestation regarding address");
 		List<Firestation> firesData = readJsonFileForFirestations();
 		boolean isPresent = false;
 		for(Firestation fireS : firesData) {
 			fireS.getStationNumber();
 			if(firestation.getStationNumber() == fireS.getStationNumber()) {
 				
-				logger.error("Firestation doesn't exist");
 				isPresent= true;
 			}
 		}
-		
+		 
 		
 		if(isPresent) {
 			writeJSONData(firesData);
 		
 		
-		Firestation firestationPresent = null ;
-		if(firesData != null) {
-			Predicate <Firestation> condition1 = fire -> fire.getAddress().equalsIgnoreCase(firestation.getAddress()); 
-			Predicate<Firestation> condition2 = fire -> fire.getStationNumber()==(firestation.getStationNumber());
-			firesData.removeIf(condition1.and(condition2));
-		}
-		else  {
-			firesData = new ArrayList<>();
-		}
-		if(firestationPresent == null) {
-			
-			int index=0;
-			for( int i=0;i<firestations.size();i++) {
-				if (firestations.get(i).getId() > index) {
-					index = firestations.get(i).getId();
-				}
-			 
+			Firestation firestationPresent = null ;
+			if(firesData != null) {
+				Predicate <Firestation> condition1 = fire -> fire.getAddress().equalsIgnoreCase(firestation.getAddress()); 
+				Predicate<Firestation> condition2 = fire -> fire.getStationNumber()==(firestation.getStationNumber());
+				firesData.removeIf(condition1.and(condition2));
 			}
-			firestation.setId(index+1);
-			firesData.add(firestation);
-		}
-		writeJSONData(firesData);
-		logger.info("add data in new Json file for firestation");
+			else  {
+				firesData = new ArrayList<>();
+			}
+						 
+				int index = 0;
+				for( int i=0;i<firesData.size();i++) {
+					if (firesData.get(i).getId() > index) {
+						index = firesData.get(i).getId();
+					}
+				 
+				}
+				firestation.setId(index+1);
+				firesData.add(firestation);
 			
-		return true;
+			writeJSONData(firesData);
+			logger.info("add data in new Json file for firestation");
+				
+			return true;
+		
 		}else {
 			return false;
 		}
@@ -147,6 +144,7 @@ public class FirestationServiceImpl implements FirestationService{
 	@Override
 	public List<Firestation> updateFirestation(Firestation firestation) {
 		logger.info("update data in new Json file for firestation");
+		List<Firestation> firestations = new ArrayList<>();
 		List<Firestation> updatedFirestation = new ArrayList<>();
 		List<Firestation> firesData = readJsonFileForFirestations();
 		
