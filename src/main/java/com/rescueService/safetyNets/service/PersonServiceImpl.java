@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -183,8 +184,8 @@ public class PersonServiceImpl implements PersonService {
 			personData = new ArrayList<>();
 	
 		int i =0;
-		for( i=0;i<persons.size();i++) {
-			persons.get(i);
+		for( i=0;i<personData.size();i++) {
+			personData.get(i);
 		}
 			person.setId(i);
 			person.setAddress(person.getAddress());
@@ -284,6 +285,7 @@ public class PersonServiceImpl implements PersonService {
 				returnValue.addAll( personData
 								.stream()
 								.filter(perse ->perse.getAddress().equalsIgnoreCase(firest.getAddress()))
+								.sorted(Comparator.comparing(perse -> perse.getAddress()))
 								.map(floodStationsMapperServiceDTO)
 								 .collect(Collectors.toList()));
 					}

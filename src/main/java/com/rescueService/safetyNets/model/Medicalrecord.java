@@ -14,7 +14,7 @@ public class Medicalrecord {
 			
 	}
 	
-	private Long id;
+	private int id;
 	
 	private String firstName;
 	
@@ -27,12 +27,12 @@ public class Medicalrecord {
 	private JsonNode allergies;
 	
 	
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
 	
 	
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	

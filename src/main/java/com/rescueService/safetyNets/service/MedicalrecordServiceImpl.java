@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,8 +18,10 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rescueService.safetyNets.dto.MedicalrecordDto;
+import com.rescueService.safetyNets.dto.MedicalrecordMapperServiceDTO;
+import com.rescueService.safetyNets.dto.PersonMapperServiceDTO;
 import com.rescueService.safetyNets.model.Medicalrecord;
-import com.rescueService.safetyNets.model.Person;
 
 import lombok.Data;
 
@@ -30,6 +33,9 @@ public class MedicalrecordServiceImpl implements MedicalrecordService {
 	
 	@Autowired
 	PersonServiceImpl personServiceImpl;
+	
+	private final PersonMapperServiceDTO personMapperServiceDTO;
+	private final MedicalrecordMapperServiceDTO medicalrecordMapperServiceDTO;
 	
 	List<Medicalrecord> medicalrecords = new ArrayList<>();
 
@@ -45,8 +51,14 @@ public class MedicalrecordServiceImpl implements MedicalrecordService {
 		Iterator iterator = medic.iterator(); 
 			while (iterator.hasNext()) {
 				
-				Medicalrecord medicalrecord = new Medicalrecord();
+				//Medicalrecord medicalrecord = new Medicalrecord();
 				JsonNode objInner = (JsonNode) iterator.next();
+				Medicalrecord medicalrecord = new Medicalrecord();
+				//Medicalrecord medicRecord = new Medicalrecord();
+				int i =0;
+				for( i=0;i<medicalrecords.size();i++) {
+					medicalrecords.get(i);
+				}
 
 			// System.out.println(iterator.next());
 			String firstName = (objInner.get("firstName").toString()).replace("\"","");
@@ -56,6 +68,7 @@ public class MedicalrecordServiceImpl implements MedicalrecordService {
 			JsonNode medications = objInner.get("medications");
 			JsonNode allergies = objInner.get("allergies");
 		
+			medicalrecord.setId(i);
 			medicalrecord.setFirstName(firstName);
 			medicalrecord.setLastName(lastName);
 			medicalrecord.setBirthDate(birthDate);
@@ -84,24 +97,15 @@ public class MedicalrecordServiceImpl implements MedicalrecordService {
 	}
 
 	@Override
-	public List<Medicalrecord> getInfoFromMedicalrecord (String lastName) {
-		List<Medicalrecord> listMedical = new ArrayList<>();
+	public Stream<MedicalrecordDto> getInfoFromMedicalrecord (String lastName) {
+		logger.info("Getting infos from person with Medicalrecords");
 		
-		List<Medicalrecord> medicalData = readJsonFileForMedicalrecords();
-		Predicate <Medicalrecord> condition1 = medi -> medi.getLastName().equalsIgnoreCase(lastName); 
-		for(Medicalrecord medica:medicalData) {
-			if(condition1 != null) {
-				medica.getFirstName();
-				medica.getLastName();
-				medica.getAllergies();
-				medica.getMedications();
-				medica.getAllergies();
-				listMedical.add(medica);
-			}
-		}	
-		return listMedical;	
+		Stream<MedicalrecordDto> personData = readJsonFileForMedicalrecords()
+				.stream()
+				.filter(pers -> pers.getLastName().equalsIgnoreCase(lastName))
+				.map(medicalrecordMapperServiceDTO);
+		return personData;
 	}
-
 
 	@Override
 	public  boolean addMedicalrecord(Medicalrecord  medicalrecord) {
@@ -117,20 +121,34 @@ public class MedicalrecordServiceImpl implements MedicalrecordService {
 		if(dateConverted > currentDate) {
 			return false;
 		}else {
+			Medicalrecord medicalPresent = null;
+			if(medicalData!= null){
 			Predicate <Medicalrecord> condition1 = medi -> medi.getLastName().equalsIgnoreCase(medicalrecord.getLastName()); 
 			Predicate<Medicalrecord> condition2 = medi -> medi.getFirstName().equalsIgnoreCase(medicalrecord.getFirstName());
 			Predicate<Medicalrecord> condition3 = medi -> medi.getBirthDate().equals(medicalrecord.getBirthDate());
 			medicalData.removeIf(condition1.and(condition2).and(condition3));
+			}
+			else {
+				medicalData = new ArrayList<>();
+			}
+			int index=0;
+			for( int i=0;i<medicalData.size();i++) {
+				if (medicalData.get(i).getId() > index) {
+					index = medicalData.get(i).getId();
+				}
+			}
+			medicalrecord.setId(index+1);
 			medicalData.add(medicalrecord);	
-			writeJSONData(medicalData);
 		}
-		return addedMedical;
+			writeJSONData(medicalData);
+	
+		return true;
 	}
 	
 	@Override
 	public List<Medicalrecord>  updateMedicalrecord(Medicalrecord medicalrecord) {
 		List<Medicalrecord> addedMedical = new ArrayList<>();
-		
+		logger.info("update medical in medical record");
 		List<Medicalrecord> medicalData = readJsonFileForMedicalrecords();
 		Medicalrecord medicalPresent = null;
 		
@@ -143,15 +161,18 @@ public class MedicalrecordServiceImpl implements MedicalrecordService {
 		else 
 			medicalData = new ArrayList<>();
 	
-		if(medicalPresent == null) {
+		int i =0;
+		for( i=0;i<medicalData.size();i++) {
+			medicalData.get(i);
+		}
+			medicalrecord.setId(i);
 			medicalrecord.setBirthDate(medicalrecord.getBirthDate());
 			medicalrecord.setAllergies(medicalrecord.getAllergies());
 			medicalrecord.setMedications(medicalrecord.getMedications());
 			medicalData.add(medicalrecord);
 			
 		writeJSONData(medicalData);
-		logger.info("update medical in medical record");
-		}
+	
 		return addedMedical;
 	}
 	
@@ -168,6 +189,11 @@ public class MedicalrecordServiceImpl implements MedicalrecordService {
 		logger.info("delete medical in medical record");
 		return deletedMedical;
 		}
+
+	public MedicalrecordServiceImpl() {
+		this.personMapperServiceDTO = new PersonMapperServiceDTO();
+		this.medicalrecordMapperServiceDTO = new MedicalrecordMapperServiceDTO();
+	}
 
 }
 	

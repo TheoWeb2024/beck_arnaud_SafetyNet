@@ -1,6 +1,7 @@
 package com.rescueService.safetyNets.controller;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rescueService.safetyNets.dto.MedicalrecordDto;
+import com.rescueService.safetyNets.dto.PersonDto;
 import com.rescueService.safetyNets.model.Medicalrecord;
 import com.rescueService.safetyNets.service.MedicalrecordService;
 
@@ -44,8 +48,9 @@ public class MedicalrecordController {
 		return medicalrecordService.deleteMedicalrecord(lastName, firstName);
 	}
 	
-	@GetMapping("/personMedicalrecords={lastName}")
-	public List<Medicalrecord> getInfoFromMedicalrecord (@PathVariable String lastName) {
+	@GetMapping("/personMedicalrecords")
+	public Stream<MedicalrecordDto> getInfoFromMedicalrecord (@RequestParam String lastName) {
+		logger.info("MedicalRecordController getting info regard lastName");
 		return medicalrecordService.getInfoFromMedicalrecord(lastName);
 	}
 }

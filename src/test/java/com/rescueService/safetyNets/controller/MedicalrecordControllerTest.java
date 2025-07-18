@@ -78,7 +78,7 @@ class MedicalrecordControllerTest {
 		
 		  dataTestInfos.getInfoFromMedicalrecord("cadigan");
 		  
-		  mockMvc.perform(get("/medicalRecord/personMedicalrecords=cadigan"))
+		  mockMvc.perform(get("/medicalRecord/personMedicalrecords?lastName=cadigan"))
 		  .andDo(print())
 		  .andExpect(status().isOk());  
 	  }

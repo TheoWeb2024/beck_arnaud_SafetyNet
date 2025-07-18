@@ -160,8 +160,8 @@ public class FirestationServiceImpl implements FirestationService{
 			firesData = new ArrayList<>();
 	
 		int i =0;
-		for( i=0;i<firestations.size();i++) {
-			firestations.get(i);
+		for( i=0;i<firesData.size();i++) {
+			firesData.get(i);
 		}
 		firestation.setId(i);
 		
